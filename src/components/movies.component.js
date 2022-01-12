@@ -1,27 +1,37 @@
 import {Component} from "react";
 import Table from "./common/table.component";
+import Rating from "./rating.component";
+import getMovies from "../services/get-movies.service";
 
 export default class Movies extends Component {
     state = {
-        movies: [
-            {id: 1, title: 'The Shawshank Redemption', rating: '9.2', my_rating: ''},
-            {id: 2, title: 'The Shawshank Redemption', rating: '9.2', my_rating: ''},
-            {id: 3, title: 'The Shawshank Redemption', rating: '9.2', my_rating: ''}
-        ]
+        movies: []
+    }
+    componentDidMount() {
+        const movies = getMovies();
+        this.setState({movies})
+    }
+
+    handleToggleRating = id => {
+        const movies = [...this.state.movies]
+        const movie = movies.find(movie => movie.id === id)
+        movie.my_rating = !(movie.my_rating)
+        this.setState({ movies })
     }
 
     render() {
         const columns = [
-            {label: 'ID', path: 'id', content: item => <td>{item}</td>},
-            {label: 'Title', path: 'title', content: item => <td>{item}</td>},
-            {label: 'Rating', path: 'rating', content: item => <td>{item}</td>},
-            {label: 'Rating', path: 'my_rating', content: item => <td>{item}</td>},
+            {label: 'Rank', path: 'id', content: (movie,key) => <td>{movie[key]}</td>},
+            {label: 'Title', path: 'title', content:  (movie,key) => <td>{movie[key]}</td>},
+            {label: 'Rating', path: 'rating', content:  (movie,key) => <td><i className='fa fa-star'/> {movie[key]}</td>},
+            {label: 'My Rating', path: 'my_rating', content:  (movie,key) => <td><Rating isRated={movie[key]} rank={movie.id} handleToggleRating={this.handleToggleRating}/></td>},
+            {label: 'Action', path: 'handle', content:  (movie,key) => <td>{movie[key]}</td>},
         ]
 
         return (
             <>
                 <div className="container p-2">
-                    <div className='card-title'><h3>Movie List</h3></div>
+                    <div className='card-title'><h3>IMDb Top 5 Movies</h3></div>
                     <Table body={this.state.movies} columns={columns}/>
                 </div>
             </>
