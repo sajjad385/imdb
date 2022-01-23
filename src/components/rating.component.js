@@ -1,41 +1,33 @@
-import {Component} from "react";
+import {useState} from "react";
 
-class Rating extends Component {
-    state = {
-        isHovered: false
+const Rating = ({handleToggleRating, rank, isRated}) => {
+    const [isHovered, setIsHovered] = useState(false)
+
+    const handleHover = () => {
+        setIsHovered(true)
     }
 
-    handleHover = () => {
-        this.setState({isHovered: true})
+    const handleHoverOut = () => {
+        setIsHovered(false)
     }
 
-    handleHoverOut = () => {
-        this.setState({isHovered: false})
-    }
-
-    getClassName = () => {
-        const {isRated} = this.props
-        const {isHovered} = this.state
+    const getClassName = () => {
         let className = isRated ? 'fa fa-star' : 'fa fa-star-o'
         className += isHovered ? ' text-primary' : ''
         return className
     }
 
-    handleRating =()=>{
+    const handleRating = () => {
         console.log('clicked')
     }
-
-    render() {
-        const {handleToggleRating,rank} = this.props
-        return (
-            <i
-                onMouseOver={this.handleHover}
-                onMouseOut={this.handleHoverOut}
-                onClick={()=>handleToggleRating(rank)}
-                className={this.getClassName()}
-            />
-        );
-    }
+    return (
+        <i
+            onMouseOver={handleHover}
+            onMouseOut={handleHoverOut}
+            onClick={() => handleToggleRating(rank)}
+            className={getClassName()}
+        />
+    );
 }
 
 export default Rating
